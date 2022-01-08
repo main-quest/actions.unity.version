@@ -1,5 +1,5 @@
 name: actions.unity.version
-description: 'Gets the unity version of the project'
+description: "Gets the unity version of the project as the 'value' oputput"
 inputs:
   project_path:
     description: "Relative path of the Unity project. Default '.'"
@@ -7,7 +7,7 @@ inputs:
     default: '.'
 
 outputs:
-  version: 
+  value: 
     description: "The Unity version, ex. 2020.3.18f1"
     value: ${{ steps.version_getter_win.outputs.value }}${{ steps.version_getter_unix.outputs.value }}
     
