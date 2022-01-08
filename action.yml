@@ -1,0 +1,40 @@
+name: actions.unity.version
+description: 'Gets the unity version of the project'
+inputs:
+  project_path:
+    description: "Relative path of the Unity project. Default '.'"
+    required: false
+    default: '.'
+
+outputs:
+  version: 
+    description: "The Unity version, ex. 2020.3.18f1"
+    value: ${{ steps.version_getter_win.outputs.value }}${{ steps.version_getter_unix.outputs.value }}
+    
+runs:
+  using: "composite"
+  steps:  
+    #OS/
+    - name: "Read Unity version from <project-path>ProjectSettings/ProjectVersion.txt file [WIN]"
+      id: version_getter_win
+      if: runner.os == 'Windows'
+      shell: powershell
+      run: |
+        $file_path="${{ inputs.project_path }}/ProjectSettings/ProjectVersion.txt"
+        $kw="m_EditorVersion: "
+        $line=(Select-String -Path "$file_path" -Pattern ("$kw" + '.*')).Matches[0]
+        $vers=$line.Replace("$kw", "")
+        echo "::set-output name=value::$vers"
+
+    - name: "Read Unity version from <project-path>ProjectSettings/ProjectVersion.txt file [UNIX]"
+      id: version_getter_unix
+      if: runner.os != 'Windows'
+      shell: bash
+      run: |
+        file_path="${{ inputs.project_path }}/ProjectSettings/ProjectVersion.txt"
+        kw="m_EditorVersion: "
+        line=$(grep "$kw" "ProjectSettings/ProjectVersion.txt" | tr -d '\r\n')
+        vers=${line//$kw}
+        echo "::set-output name=value::$vers"
+    #/OS
+
