@@ -22,7 +22,7 @@ runs:
       run: |
         $file_path="${{ inputs.project_path }}/ProjectSettings/ProjectVersion.txt"
         $kw="m_EditorVersion: "
-        $line=(Select-String -Path "$file_path" -Pattern ("$kw" + '.*')).Matches[0]
+        $line=(Select-String -Path "$file_path" -Pattern ("$kw" + '.*')).Matches[0].Value
         $vers=$line.Replace("$kw", "")
         echo "::set-output name=value::$vers"
 
