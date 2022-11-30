@@ -24,7 +24,8 @@ runs:
         $kw="m_EditorVersion: "
         $line=(Select-String -Path "$file_path" -Pattern ("$kw" + '.*')).Matches[0].Value
         $vers=$line.Replace("$kw", "")
-        echo "::set-output name=value::$vers"
+        # echo "::set-output name=value::$vers"
+        echo "value=$vers" >> $env:GITHUB_OUTPUT
 
     - name: "Read Unity version from <project-path>ProjectSettings/ProjectVersion.txt file [UNIX]"
       id: version_getter_unix
@@ -35,6 +36,7 @@ runs:
         kw="m_EditorVersion: "
         line=$(grep "$kw" "ProjectSettings/ProjectVersion.txt" | tr -d '\r\n')
         vers=${line//$kw}
-        echo "::set-output name=value::$vers"
+        # echo "::set-output name=value::$vers"
+        echo "value=$vers" >> $GITHUB_OUTPUT
     #/OS
 
